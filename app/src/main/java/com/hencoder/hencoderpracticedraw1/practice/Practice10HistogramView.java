@@ -8,6 +8,11 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.hencoder.hencoderpracticedraw1.model.Data;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class Practice10HistogramView extends View {
 
     public Practice10HistogramView(Context context) {
@@ -16,19 +21,39 @@ public class Practice10HistogramView extends View {
 
     public Practice10HistogramView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        init();
     }
 
     public Practice10HistogramView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        init();
+    }
+
+    private List<Data> mDatas = new ArrayList<>();
+    private float max = 0;
+
+
+    private void init() {
+        mDatas.add(new Data("Froyo", 5.0f, Color.GREEN));
+        mDatas.add(new Data("GB", 25.0f, Color.GREEN));
+        mDatas.add(new Data("ICS", 25.0f, Color.GREEN));
+        mDatas.add(new Data("JB", 90.0f, Color.GREEN));
+        mDatas.add(new Data("KitKat", 180.0f, Color.GREEN));
+        mDatas.add(new Data("L", 225.0f, Color.GREEN));
+        mDatas.add(new Data("M", 160.0f, Color.GREEN));
+
+        for (Data data : mDatas) {
+        	max = Math.max(max, data.getChance());
+        }
     }
 
 
-    Paint mTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     Paint mShapePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
     int unit = 100;
     int halfUnit = unit / 2;
-    int space = 8;
+    int space = 16;
     String[] strs = {"Froyo", "GB", "ICS", "JB", "KitKat", "L", "M"};
     float[] chances = {0, 50, 50, 180, 360, 450, 320};
 
@@ -38,33 +63,31 @@ public class Practice10HistogramView extends View {
 
 //        综合练习
 //        练习内容：使用各种 Canvas.drawXXX() 方法画直方图
-        int width = getWidth();
-        int height = getHeight();
+        mPaint.setColor(Color.WHITE);
+        mPaint.setTextSize(48);
+        mPaint.setTextAlign(Paint.Align.CENTER);
+        canvas.drawText("直方图", canvas.getWidth() / 2, canvas.getHeight() * 0.95f, mPaint);
 
-        float lineHeight = height - 3 * unit;
-        float lineWidth = width - 2 * unit;
+        canvas.translate(canvas.getWidth() * 0.1f, canvas.getHeight() * 0.80f);
 
-        float baseX = unit;
-        float baseY = lineHeight + 65;
+        mPaint.setStyle(Paint.Style.STROKE);
+        canvas.drawLine(0, 0, 0, -canvas.getHeight() * 0.7f, mPaint);
+        canvas.drawLine(0, 0, canvas.getWidth() * 0.8f, 0, mPaint);
 
-        mTextPaint.setColor(Color.WHITE);
-        mTextPaint.setStyle(Paint.Style.STROKE);
-        mTextPaint.setTextSize(48);
-        mTextPaint.setTextAlign(Paint.Align.CENTER);
-        canvas.drawText("直方图", width / 2, height - 50, mTextPaint);
+        float width = (canvas.getWidth() * 0.8f - 100) / mDatas.size() * 0.8f;
+        float space = (canvas.getWidth() * 0.8f - 100) / mDatas.size() * 0.2f;
 
-        mTextPaint.setTextSize(25);
-        mShapePaint.setStyle(Paint.Style.FILL);
-        mShapePaint.setColor(Color.GREEN);
-        for (int i = 0; i < strs.length; i++) {
-            canvas.drawText(strs[i], baseX + space * (i + 1) + halfUnit * (2 * i + 1), baseY + 30, mTextPaint);
-            //canvas.drawRect(baseX + space * (i + 1) + unit * i, baseY - chances[i], baseX + 2 * (space + unit), baseY, mShapePaint);
+        float startX = 0.0f;
+        for (Data item : mDatas) {
+        	mPaint.setColor(Color.WHITE);
+            mPaint.setStyle(Paint.Style.FILL);
+            mPaint.setTextSize(20);
+            mPaint.setTextAlign(Paint.Align.CENTER);
+            canvas.drawText(item.getName(), startX + space + width / 2, 25, mPaint);
+
+            mPaint.setColor(item.getColor());
+            canvas.drawRect(startX + space, -item.getChance() / max * canvas.getHeight() * 0.65f, startX + space + width, 0, mPaint);
+            startX = space + width + startX;
         }
-
-        mShapePaint.setColor(Color.WHITE);
-        mShapePaint.setStrokeWidth(3);
-
-        float[] pots = {unit, 65, baseX, baseY, baseX, baseY, unit + lineWidth, lineHeight + 65};
-        canvas.drawLines(pots, mShapePaint);
     }
 }
