@@ -88,7 +88,6 @@ public class Practice10HistogramView extends View {
             mPaint.setColor(item.getColor());
             canvas.drawRect(startX + space, -item.getChance() / max * canvas.getHeight() * 0.65f, startX + space + width, 0, mPaint);
             startX = space + width + startX;
-
         }
     }
 }
