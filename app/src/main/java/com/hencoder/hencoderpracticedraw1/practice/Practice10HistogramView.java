@@ -30,6 +30,7 @@ public class Practice10HistogramView extends View {
     }
 
     private List<Data> mDatas = new ArrayList<>();
+    Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private float max = 0;
 
 
@@ -46,16 +47,6 @@ public class Practice10HistogramView extends View {
         	max = Math.max(max, data.getChance());
         }
     }
-
-
-    Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-    Paint mShapePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-
-    int unit = 100;
-    int halfUnit = unit / 2;
-    int space = 16;
-    String[] strs = {"Froyo", "GB", "ICS", "JB", "KitKat", "L", "M"};
-    float[] chances = {0, 50, 50, 180, 360, 450, 320};
 
     @Override
     protected void onDraw(Canvas canvas) {
